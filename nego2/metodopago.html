@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Explora Tabasco - Pago</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f8f3;
+            margin: 0;
+        }
+
+        header {
+            background: linear-gradient(#1f721f, #3ea73e);
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #1f721f;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            border: 1px solid #2d882d;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .buttons .active {
+            background-color: #2d882d;
+            color: white;
+        }
+
+        .formulario {
+            display: none;
+        }
+
+        .formulario.active {
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        #confirmar {
+            background-color: #2d882d;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #mensaje {
+            text-align: center;
+            padding: 15px;
+            color: green;
+            font-weight: bold;
+            display: none;
+        }
+
+        #loading {
+            display: none;
+            text-align: center;
+        }
+
+        #loading img {
+            width: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Explora Tabasco</h1>
+        <p>Vive la magia de la selva, el cacao y la cultura olmeca</p>
+    </header>
+
+    <nav>
+        <a href="#">Explora Tabasco</a>
+        <a href="#">Experiencias</a>
+        <a href="#">Mapa</a>
+        <a href="#">Carrito</a>
+        <a href="#">Pagar</a>
+        <a href="#">Soporte</a>
+    </nav>
+
+    <div class="container">
+        <h2>Finalizar Pago</h2>
+
+        <div class="buttons">
+            <button id="btn-tarjeta" class="active">Tarjeta</button>
+            <button id="btn-paypal">PayPal</button>
+            <button id="btn-oxxo">OXXO</button>
+        </div>
+
+        <!-- Formulario Tarjeta -->
+        <div id="form-tarjeta" class="formulario active">
+            <input type="text" placeholder="Ej. Juan Pérez" id="nombreTarjeta">
+            <input type="text" placeholder="Ej. 1234 5678 9012 3456" id="numeroTarjeta">
+            <input type="text" placeholder="MM/AA" id="expTarjeta">
+            <input type="text" placeholder="Ej. 123" id="cvvTarjeta">
+        </div>
+
+        <!-- Formulario PayPal -->
+        <div id="form-paypal" class="formulario">
+            <input type="email" placeholder="Correo electrónico" id="correoPaypal">
+        </div>
+
+        <!-- Formulario OXXO -->
+        <div id="form-oxxo" class="formulario">
+            <p>Se generará un código de barras para realizar el pago en tienda.</p>
+            <button onclick="alert('Código de barras generado: 123456789012')">Generar Código</button>
+        </div>
+
+        <button id="confirmar">Confirmar Pago</button>
+
+        <div id="mensaje">¡Pago procesado con éxito!</div>
+        <div id="loading"><img src="https://i.imgur.com/llF5iyg.gif" alt="Cargando...">
+            <p>Procesando pago...</p>
+        </div>
+    </div>
+
+    <script>
+        const btnTarjeta = document.getElementById("btn-tarjeta");
+        const btnPaypal = document.getElementById("btn-paypal");
+        const btnOxxo = document.getElementById("btn-oxxo");
+
+        const formTarjeta = document.getElementById("form-tarjeta");
+        const formPaypal = document.getElementById("form-paypal");
+        const formOxxo = document.getElementById("form-oxxo");
+
+        const confirmar = document.getElementById("confirmar");
+        const mensaje = document.getElementById("mensaje");
+        const loading = document.getElementById("loading");
+
+        function mostrarFormulario(formularioActivo) {
+            [formTarjeta, formPaypal, formOxxo].forEach(f => f.classList.remove("active"));
+            formularioActivo.classList.add("active");
+
+            [btnTarjeta, btnPaypal, btnOxxo].forEach(b => b.classList.remove("active"));
+            if (formularioActivo === formTarjeta) btnTarjeta.classList.add("active");
+            if (formularioActivo === formPaypal) btnPaypal.classList.add("active");
+            if (formularioActivo === formOxxo) btnOxxo.classList.add("active");
+        }
+
+        btnTarjeta.onclick = () => mostrarFormulario(formTarjeta);
+        btnPaypal.onclick = () => mostrarFormulario(formPaypal);
+        btnOxxo.onclick = () => mostrarFormulario(formOxxo);
+
+        confirmar.onclick = () => {
+            let valido = false;
+
+            if (formTarjeta.classList.contains("active")) {
+                valido =
+                    document.getElementById("nombreTarjeta").value &&
+                    document.getElementById("numeroTarjeta").value &&
+                    document.getElementById("expTarjeta").value &&
+                    document.getElementById("cvvTarjeta").value;
+            } else if (formPaypal.classList.contains("active")) {
+                valido = document.getElementById("correoPaypal").value;
+            } else if (formOxxo.classList.contains("active")) {
+                valido = true; // OXXO no requiere campos extra
+            }
+
+            if (valido) {
+                confirmar.style.display = "none";
+                loading.style.display = "block";
+
+                setTimeout(() => {
+                    loading.style.display = "none";
+                    mensaje.style.display = "block";
+
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 2000);
+                }, 2500);
+            } else {
+                alert("Por favor, llena todos los campos requeridos.");
+            }
+        };
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explora Tabasco - Experiencias Ecoturísticas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            valorfamily: Arial, sans-serif;
+            background-color: #f4f9f4;
+            /* Verde claro inspirado en la selva */
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(to right, #2e7d32, #4caf50);
+            /* Verde Tabasco */
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .navbar {
+            background-color: #1b5e20;
+            /* Verde oscuro */
+        }
+
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+        }
+
+        #hero {
+            background-image: url('https://via.placeholder.com/1200x400?text=Pantanos+de+Centla');
+            /* Cambia por imagen real */
+            background-size: cover;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #catalogo .card {
+            margin: 15px;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #mapa {
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        #chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #chatbot-ventana {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+
+        #carrito,
+        #metodos-pago,
+        #atencion-cliente {
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+        footer {
+            background-color: #1b5e20;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            /* o el alto que prefieras */
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Encabezado -->
+    <header>
+        <h1>Explora Tabasco</h1>
+        <p>Vive la magia de la selva, el cacao y la cultura olmeca</p>
+    </header>
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Explora Tabasco</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link"
+                            href="http://localhost/nego2/experiencia.html">Experiencias</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost/nego2/mapa.html">Mapa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost/nego2/carrito.html">Carrito</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost/nego2/atencioncliente.html">Atencion
+                            al cliente</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- Catálogo de Experiencias -->
+    <section id="catalogo" class="container my-5">
+        <h2>Nuestras Experiencias</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="img/rutacacao.jpg" class="card-img" alt="Ruta del Cacao">
+                    <div class="card-body">
+                        <h5 class="card-title">Ruta del Cacao</h5>
+                        <p class="card-text">Visita Comalcalco, cuna del cacao, y participa en un taller de chocolate
+                            artesanal.</p>
+                        <p><strong>Precio: $1,200 MXN</strong></p>
+                        <button class="btn btn-success" onclick="agregarAlCarrito('Ruta del Cacao', 1200)">Agregar al
+                            Carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="img/pantanoscentla.jpg" class="card-img" alt="Pantanos de Centla">
+                    <div class="card-body">
+                        <h5 class="card-title">Tour Pantanos de Centla</h5>
+                        <p class="card-text">Navega por la Reserva de la Biosfera y observa cocodrilos, aves y
+                            manglares.</p>
+                        <p><strong>Precio: $1,500 MXN</strong></p>
+                        <button class="btn btn-success"
+                            onclick="agregarAlCarrito('Tour Pantanos de Centla', 1500)">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="IMG/yumka.jpg" class="card-img" alt="Yumka">
+                    <div class="card-body">
+                        <h5 class="card-title">Aventura en Yumká</h5>
+                        <p class="card-text">Disfruta de un safari ecológico en el zoológico de Villahermosa.</p>
+                        <p><strong>Precio: $800 MXN</strong></p>
+                        <button class="btn btn-success" onclick="agregarAlCarrito('Aventura en Yumká', 800)">Agregar al
+                            Carrito</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="IMG/aventurasierra.png" class="card-img" alt="Yumka">
+                    <div class="card-body">
+                        <h5 class="card-title">Aventura en la sierra</h5>
+                        <p class="card-text">Vive la gran ruta Aventura en la Sierra, un lugar que te invita a la
+                            acción, con pueblos pintorescos, cascadas majestuosas, cuevas ancestrales, hermosos ríos, un
+                            mundo subterráneo, gastronomía memorable y paisajes increíbles.</p>
+                        <p><strong>Precio: $1000 MXN</strong></p>
+                        <button class="btn btn-success" onclick="agregarAlCarrito('Aventura en Yumká', 800)">Agregar al
+                            Carrito</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="IMG/biji.jpg" class="card-img" alt="Yumka">
+                    <div class="card-body">
+                        <h5 class="card-title">Biji Yokot'an</h5>
+                        <p class="card-text">Alegría, folklor, colores y mucho sabor caracterizan a la Gran Ruta Biji
+                            Yokot’an, corredor gastronómico por excelencia donde nace la cocina ancestral famosa por su
+                            uliche, pejelagarto asado y las tradicionales butifarras. Conoce sus artesanías elaboradas
+                            por las manos mágicas yokotanes que transforman la exuberante naturaleza tabasqueña en
+                            verdaderas obras de arte.</p>
+                        <p><strong>Precio: $1000 MXN</strong></p>
+                        <button class="btn btn-success" onclick="agregarAlCarrito('Aventura en Yumká', 800)">Agregar al
+                            Carrito</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Explora Tabasco. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Carrito de Compras
+        let carrito = [];
+        let total = 0;
+
+        function agregarAlCarrito(nombre, precio) {
+            carrito.push({ nombre, precio });
+            total += precio;
+            actualizarCarrito();
+        }
+
+        function actualizarCarrito() {
+            const items = document.getElementById('carrito-items');
+            items.innerHTML = '';
+            carrito.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.textContent = ${ item.nombre } - $${ item.precio } MXN;
+                const btnEliminar = document.createElement('button');
+                btnEliminar.textContent = 'Eliminar';
+                btnEliminar.className = 'btn btn-danger btn-sm ms-2';
+                btnEliminar.onclick = () => {
+                    total -= item.precio;
+                    carrito.splice(index, 1);
+                    actualizarCarrito();
+                };
+                div.appendChild(btnEliminar);
+                items.appendChild(div);
+            });
+            document.getElementById('total').textContent = total;
+        }
+
+        // Mapa Interactivo
+        const map = L.map('map').setView([17.9892, -92.9475], 10); // Centrado en Villahermosa
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Marcadores estáticos
+        L.marker([17.9892, -92.9475]).addTo(map)
+            .bindPopup('Villahermosa - Punto de partida para tus aventuras')
+            .openPopup();
+        L.marker([17.875, -92.816]).addTo(map)
+            .bindPopup('Pantanos de Centla - Tour Ecológico')
+            .openPopup();
+        L.marker([18.268, -93.216]).addTo(map)
+            .bindPopup('Comalcalco - Ruta del Cacao y pirámides olmecas')
+            .openPopup();
+
+        // Chatbot Básico
+        function abrirChatbot() {
+            const ventana = document.getElementById('chatbot-ventana');
+            ventana.style.display = ventana.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function enviarMensajeChatbot() {
+            const input = document.getElementById('chatbot-input');
+            const mensajes = document.getElementById('chatbot-mensajes');
+            const mensaje = input.value.toLowerCase();
+            if (mensaje) {
+                const div = document.createElement('div');
+                div.textContent = Tú: ${ mensaje };
+                mensajes.appendChild(div);
+
+                // Respuestas predefinidas
+                let respuesta = 'Bot: ¡Hola! Escribe "tours", "precios" o "lugares" para más info.';
+                if (mensaje.includes('tours')) {
+                    respuesta = 'Bot: Ofrecemos la Ruta del Cacao, Tour Pantanos de Centla y Aventura en Yumká. ¿Cuál te interesa?';
+                } else if (mensaje.includes('precios')) {
+                    respuesta = 'Bot: Los precios van desde $800 MXN (Yumká) hasta $1,500 MXN (Pantanos). Mira el catálogo para detalles.';
+                } else if (mensaje.includes('lugares')) {
+                    respuesta = 'Bot: Explora Villahermosa, Comalcalco y los Pantanos de Centla en nuestro mapa interactivo.';
+                }
+
+                const divRespuesta = document.createElement('div');
+                divRespuesta.textContent = respuesta;
+                mensajes.appendChild(divRespuesta);
+                input.value = '';
+                mensajes.scrollTop = mensajes.scrollHeight;
+            }
+        }
+    </script>
+
+    <!-- CHATBOT FLOTANTE INICIO -->
+    <style>
+        #chatbot-toggle {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #2d882d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 300px;
+            background-color: #f9fff9;
+            border: 1px solid #2d882d;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 999;
+            font-family: Arial, sans-serif;
+        }
+
+        #chatbot-header {
+            background-color: #2d882d;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #chatbot-body {
+            padding: 10px;
+            height: 250px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        #chatbot-body .bot,
+        #chatbot-body .user {
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 10px;
+            max-width: 90%;
+        }
+
+        .bot {
+            background-color: #e1f5e1;
+            align-self: flex-start;
+        }
+
+        .user {
+            background-color: #c2eec2;
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        #chatbot-input {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+
+        #chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 0 0 0 10px;
+            font-size: 14px;
+        }
+
+        #chatbot-input button {
+            background-color: #2d882d;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 0 10px 0;
+            cursor: pointer;
+        }
+
+        #chatbot-input input:focus {
+            outline: none;
+        }
+    </style>
+
+    <button id="chatbot-toggle">💬</button>
+
+    <div id="chatbot-window">
+        <div id="chatbot-header">Asistente Virtual</div>
+        <div id="chatbot-body"></div>
+        <div id="chatbot-input">
+            <input type="text" id="chatbot-text" placeholder="Escribe algo...">
+            <button onclick="enviarChat()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('chatbot-toggle');
+        const chatWindow = document.getElementById('chatbot-window');
+        const chatBody = document.getElementById('chatbot-body');
+        const chatInput = document.getElementById('chatbot-text');
+
+        toggleBtn.addEventListener('click', () => {
+            chatWindow.style.display = (chatWindow.style.display === 'flex') ? 'none' : 'flex';
+            chatWindow.style.flexDirection = 'column';
+        });
+
+        function enviarChat() {
+            const userText = chatInput.value.trim();
+            if (!userText) return;
+
+            agregarMensaje('user', userText);
+            chatInput.value = '';
+
+            setTimeout(() => {
+                agregarMensaje('bot', generarRespuesta(userText));
+            }, 600);
+        }
+
+        function agregarMensaje(tipo, mensaje) {
+            const msg = document.createElement('div');
+            msg.className = tipo;
+            msg.innerText = mensaje;
+            chatBody.appendChild(msg);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function generarRespuesta(texto) {
+            texto = texto.toLowerCase();
+
+            if (texto.includes("naturaleza")) {
+                return "¡Perfecto! Puedes explorar los Pantanos de Centla o hacer kayak en la selva.";
+            } else if (texto.includes("cultura") || texto.includes("olmeca")) {
+                return "Te recomiendo visitar la zona arqueológica de La Venta o los talleres de artesanías chontales.";
+            } else if (texto.includes("cacao")) {
+                return "La Ruta del Cacao es ideal para ti. Incluye tours a haciendas cacaoteras.";
+            } else if (texto.includes("gastronomía") || texto.includes("comida")) {
+                return "Puedes disfrutar de tours gastronómicos en Villahermosa o en pueblos tradicionales.";
+            } else if (texto.includes("precio")) {
+                return "Los precios varían por experiencia. Puedes consultar el catálogo para ver los detalles.";
+            } else if (texto.includes("hola") || texto.includes("buenas")) {
+                return "¡Hola! ¿En qué puedo ayudarte a explorar Tabasco?";
+            } else if (texto.includes("puto") || texto.includes("shoto")) {
+                return "ctm tu cuyeyo";
+            } else {
+                return "Lo siento, aún estoy aprendiendo. ¿Puedes ser más específico?";
+            }
+        }
+
+        // Permitir enviar con Enter
+        chatInput.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") enviarChat();
+        });
+    </script>
+    <!-- CHATBOT FLOTANTE FIN -->
+
+</body>
+
+</html>

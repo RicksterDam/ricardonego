@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Atención al Cliente - Explora Tabasco</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f3f8f3;
+        }
+
+        header {
+            background: linear-gradient(#1f721f, #3ea73e);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #1f721f;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        h2 {
+            color: #2d882d;
+            margin-top: 0;
+        }
+
+        .contact-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+
+        .contact-option {
+            flex: 1;
+            background: #e6f4e6;
+            border: 1px solid #2d882d;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .contact-option:hover {
+            background: #c7ebc7;
+        }
+
+        .formulario {
+            margin-bottom: 30px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #2d882d;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #246e24;
+        }
+
+        #respuesta-chat {
+            margin-top: 15px;
+            background-color: #e1f3e1;
+            border: 1px solid #2d882d;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        body {
+            valorfamily: Arial, sans-serif;
+            background-color: #f4f9f4;
+            /* Verde claro inspirado en la selva */
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(to right, #2e7d32, #4caf50);
+            /* Verde Tabasco */
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .navbar {
+            background-color: #1b5e20;
+            /* Verde oscuro */
+        }
+
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Explora Tabasco</h1>
+        <p>Vive la magia de la selva, el cacao y la cultura olmeca</p>
+    </header>
+
+    <nav>
+        <a href="http://localhost/nego2/index.html">Inicio</a>
+        <a href="http://localhost/nego2/experiencia.html">Experiencias</a>
+        <a href="http://localhost/nego2/mapa.html">Mapa</a>
+        <a href="http://localhost/nego2/carrito.html">Carrito</a>
+
+    </nav>
+
+    <div class="container">
+        <h2>Atención al Cliente</h2>
+        <p>¿Tienes dudas, comentarios o necesitas ayuda? Estamos aquí para ayudarte. Puedes contactarnos mediante las
+            siguientes opciones:</p>
+
+        <div class="contact-options">
+            <div class="contact-option" onclick="simularChat('WhatsApp')">
+                📱 WhatsApp
+            </div>
+
+            <div class="contact-option" onclick="simularChat('Correo')">
+                ✉ Correo Electrónico
+            </div>
+        </div>
+
+        <div id="respuesta-chat"></div>
+
+        <h3>También puedes escribirnos directamente:</h3>
+        <div class="formulario">
+            <input type="text" id="nombre" placeholder="Tu nombre">
+            <input type="email" id="correo" placeholder="Tu correo electrónico">
+            <textarea id="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..."></textarea>
+            <button onclick="enviarFormulario()">Enviar Mensaje</button>
+            <p id="confirmacion" style="color: green; display: none; margin-top: 10px;">✅ ¡Mensaje enviado! Te
+                responderemos pronto.</p>
+        </div>
+    </div>
+
+    <script>
+        function simularChat(metodo) {
+            const respuesta = document.getElementById("respuesta-chat");
+            let mensaje = "";
+
+            if (metodo === "WhatsApp") {
+                mensaje = "Has elegido WhatsApp. Puedes escribirnos al ‪+52 993 123 4567‬. Responderemos lo antes posible.";
+            } else if (metodo === "Chat en Vivo") {
+                mensaje = "Iniciando Chat en Vivo... 🤖 Hola, soy tu asistente virtual. ¿En qué puedo ayudarte?";
+            } else if (metodo === "Correo") {
+                mensaje = "Puedes enviarnos un correo a soporte@exploratabasco.com. Te responderemos en un plazo de 24 horas.";
+            }
+
+            respuesta.innerText = mensaje;
+            respuesta.style.display = "block";
+        }
+
+        function enviarFormulario() {
+            const nombre = document.getElementById("nombre").value;
+            const correo = document.getElementById("correo").value;
+            const mensaje = document.getElementById("mensaje").value;
+
+            if (nombre && correo && mensaje) {
+                document.getElementById("confirmacion").style.display = "block";
+                // Resetear campos simuladamente
+                document.getElementById("nombre").value = "";
+                document.getElementById("correo").value = "";
+                document.getElementById("mensaje").value = "";
+            } else {
+                alert("Por favor completa todos los campos antes de enviar.");
+            }
+        }
+    </script>
+
+</body>
+
+</html>
